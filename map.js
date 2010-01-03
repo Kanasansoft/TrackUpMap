@@ -19,7 +19,7 @@ var touchStartX;
 var touchStartY;
 var touchEndX;
 var touchEndY;
-var touchTime=0;
+//var touchTime=0;
 var gestureFlag=false;
 var gestureBaseScale;
 var gestureScale;
