@@ -24,7 +24,7 @@ var gestureFlag=false;
 var gestureBaseScale;
 var gestureScale;
 var gestureRotation;
-var autoCenterFlog;
+var autoCenterFlag;
 var autoDirectionType;
 var degree=30;
 var AUTO_DIRECTION_TYPE={"none":"none","NORTH":"north","HEADING":"heading"};
@@ -42,13 +42,13 @@ function $(id){
 	return document.getElementById(id);
 }
 
-function setAutoCenterFlog(flag){
-	autoCenterFlog=flag;
+function setAutoCenterFlag(flag){
+	autoCenterFlag=flag;
 	refreshButton();
 }
 
-function getAutoCenterFlog(){
-	return autoCenterFlog;
+function getAutoCenterFlag(){
+	return autoCenterFlag;
 }
 
 function setAutoDirection(type){
@@ -158,7 +158,7 @@ function changeStartDisplayPosition(e){
 function changeDisplayPosition(e){
 	e.preventDefault();
 //	e.stopPropagation();
-//	setAutoCenterFlog(false);
+//	setAutoCenterFlag(false);
 	var touches=e.touches;
 	if(gestureFlag){return;}
 	if(touches.length!=1){return;}
@@ -184,7 +184,7 @@ function changeEndDisplayPosition(e){
 //	if(gestureFlag){return;}
 	if(touches.length!=0){return;}
 	gestureFlag=false;
-	if(!getAutoCenterFlog()){
+	if(!getAutoCenterFlag()){
 		var touchMoveX=touchStartX-touchEndX;
 		var touchMoveY=touchStartY-touchEndY;
 		var radian=-Math.PI*2*degree/360;
@@ -226,7 +226,7 @@ function changePresentPosition(pos){
 			}
 		)
 	);
-	if(getAutoCenterFlog()){
+	if(getAutoCenterFlag()){
 		map.setCenter(latlng);
 	}
 	presentMarker.setPosition(latlng);
@@ -235,8 +235,8 @@ function changePresentPosition(pos){
 }
 
 function touchCenterIcon(){
-	setAutoCenterFlog(!getAutoCenterFlog());
-	if(getAutoCenterFlog()){
+	setAutoCenterFlag(!getAutoCenterFlag());
+	if(getAutoCenterFlag()){
 		map.setCenter(presentMarker.getPosition());
 	}
 }
@@ -258,7 +258,7 @@ function changeMapType(){
 }
 
 function refreshButton(){
-	$("centerIcon").src=(autoCenterFlog?centerOnIcon:centerOffIcon);
+	$("centerIcon").src=(autoCenterFlag?centerOnIcon:centerOffIcon);
 	$("northUpIcon").src=((autoDirectionType==AUTO_DIRECTION_TYPE.NORTH)?northUpOnIcon:northUpOffIcon);
 	$("headingUpIcon").src=((autoDirectionType==AUTO_DIRECTION_TYPE.HEADING)?headingUpOnIcon:headingUpOffIcon);
 }
@@ -306,7 +306,7 @@ function initialMap(){
 }
 
 function initial(){
-	setAutoCenterFlog(true);
+	setAutoCenterFlag(true);
 	setAutoDirection(AUTO_DIRECTION_TYPE.HEADING);
 	initialMap();
 	updateOrientation();
