@@ -1,0 +1,49 @@
+body{
+    margin:0px;
+}
+
+#main{
+    position:absolute;
+    top:0px;
+    left:0px;
+    z-index:0;
+    overflow:hidden;
+}
+#touch{
+    position:absolute;
+    top:0px;
+    left:0px;b
+    z-index:1;
+}
+
+#maptype{
+    position:absolute;
+    top:2px;
+    left:2px;
+    height:20px;
+    z-index:2;
+}
+
+#centerIcon{
+    position:absolute;
+    top:30px;
+    left:4px;
+    z-index:2;
+    opacity:0.75;
+}
+
+#northUpIcon{
+    position:absolute;
+    top:30px;
+    left:38px;
+    z-index:2;
+    opacity:0.75;
+}
+
+#headingUpIcon{
+    position:absolute;
+    top:30px;
+    left:72px;
+    z-index:2;
+    opacity:0.75;
+}
