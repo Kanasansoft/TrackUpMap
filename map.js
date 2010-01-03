@@ -1,5 +1,7 @@
 var width;
 var height;
+var lastTrackTime=0;
+var TRACK_INTERVAL=10000;
 var map=undefined;
 var defaultMapType="ROADMAP";
 var presentMarker=undefined;
@@ -219,6 +221,10 @@ function gestureEnd(e){
 }
 
 function changePresentPosition(pos){
+	if(pos.timestamp-lastTrackTime<TRACK_INTERVAL){
+		return;
+	}
+	lastTrackTime=pos.timestamp;
 	var latlng=new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
 	trackMarkers.push(
 		new google.maps.Marker(
