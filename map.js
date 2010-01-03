@@ -132,6 +132,7 @@ function rotateMap(){
 		$("map").style.marginBottom=Math.round((height-rotateY)/2)+"px";
 		break;
 	}
+	google.maps.event.trigger(map,"resize");
 }
 
 function changeStartDisplayPosition(e){
@@ -212,6 +213,9 @@ function gestureChange(e){
 function gestureEnd(e){
 	map.setZoom(Math.round(Math.log(e.scale)/Math.log(2))+gestureBaseScale);
 	rotateMap();
+	if(getAutoCenterFlag()){
+		map.setCenter(presentMarker.getPosition());
+	}
 }
 
 function changePresentPosition(pos){
