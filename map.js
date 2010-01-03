@@ -158,7 +158,7 @@ function changeStartDisplayPosition(e){
 function changeDisplayPosition(e){
 	e.preventDefault();
 //	e.stopPropagation();
-	setAutoCenterFlog(false);
+//	setAutoCenterFlog(false);
 	var touches=e.touches;
 	if(gestureFlag){return;}
 	if(touches.length!=1){return;}
@@ -184,12 +184,14 @@ function changeEndDisplayPosition(e){
 //	if(gestureFlag){return;}
 	if(touches.length!=0){return;}
 	gestureFlag=false;
-	var touchMoveX=touchStartX-touchEndX;
-	var touchMoveY=touchStartY-touchEndY;
-	var radian=-Math.PI*2*degree/360;
-	var moveX=Math.cos(radian)*touchMoveX-Math.sin(radian)*touchMoveY;
-	var moveY=Math.cos(radian)*touchMoveY+Math.sin(radian)*touchMoveX;
-	map.panBy(moveX,moveY);
+	if(!getAutoCenterFlog()){
+		var touchMoveX=touchStartX-touchEndX;
+		var touchMoveY=touchStartY-touchEndY;
+		var radian=-Math.PI*2*degree/360;
+		var moveX=Math.cos(radian)*touchMoveX-Math.sin(radian)*touchMoveY;
+		var moveY=Math.cos(radian)*touchMoveY+Math.sin(radian)*touchMoveX;
+		map.panBy(moveX,moveY);
+	}
 }
 
 function gestureStart(e){
