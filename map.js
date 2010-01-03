@@ -199,8 +199,10 @@ function gestureStart(e){
 }
 
 function gestureChange(e){
-	setAutoDirection(AUTO_DIRECTION_TYPE.NONE);
-	degree+=e.rotation-gestureRotation;
+//	setAutoDirection(AUTO_DIRECTION_TYPE.NONE);
+	if(autoDirectionType==AUTO_DIRECTION_TYPE.NONE){
+		degree+=e.rotation-gestureRotation;
+	}
 	gestureRotation=e.rotation;
 	rotateMap();
 }
@@ -238,12 +240,12 @@ function touchCenterIcon(){
 }
 
 function touchNorthUpIcon(){
-	setAutoDirection(AUTO_DIRECTION_TYPE.NORTH);
+	setAutoDirection(autoDirectionType==AUTO_DIRECTION_TYPE.NORTH?AUTO_DIRECTION_TYPE.NONE:AUTO_DIRECTION_TYPE.NORTH);
 	rotateMap();
 }
 
 function touchHeadingUpIcon(){
-	setAutoDirection(AUTO_DIRECTION_TYPE.HEADING);
+	setAutoDirection(autoDirectionType==AUTO_DIRECTION_TYPE.HEADING?AUTO_DIRECTION_TYPE.NONE:AUTO_DIRECTION_TYPE.HEADING);
 	rotateMap();
 }
 
