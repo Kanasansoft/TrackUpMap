@@ -254,11 +254,17 @@ function touchCenterIcon(){
 function touchNorthUpIcon(){
 	setAutoDirection(autoDirectionType==AUTO_DIRECTION_TYPE.NORTH?AUTO_DIRECTION_TYPE.NONE:AUTO_DIRECTION_TYPE.NORTH);
 	rotateMap();
+	if(getAutoCenterFlag()){
+		map.setCenter(presentMarker.getPosition());
+	}
 }
 
 function touchTrackUpIcon(){
 	setAutoDirection(autoDirectionType==AUTO_DIRECTION_TYPE.TRACK?AUTO_DIRECTION_TYPE.NONE:AUTO_DIRECTION_TYPE.TRACK);
 	rotateMap();
+	if(getAutoCenterFlag()){
+		map.setCenter(presentMarker.getPosition());
+	}
 }
 
 function changeMapType(){
