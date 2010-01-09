@@ -15,8 +15,8 @@ var centerOnIcon="images/center_on.png";
 var centerOffIcon="images/center_off.png";
 var northUpOnIcon="images/northup_on.png";
 var northUpOffIcon="images/northup_off.png";
-var headingUpOnIcon="images/headingup_on.png";
-var headingUpOffIcon="images/headingup_off.png";
+var trackUpOnIcon="images/trackup_on.png";
+var trackUpOffIcon="images/trackup_off.png";
 var touchStartX;
 var touchStartY;
 var touchEndX;
@@ -29,7 +29,7 @@ var gestureRotation;
 var autoCenterFlag;
 var autoDirectionType;
 var degree=30;
-var AUTO_DIRECTION_TYPE={"none":"none","NORTH":"north","HEADING":"heading"};
+var AUTO_DIRECTION_TYPE={"none":"none","NORTH":"north","TRACK":"track"};
 
 function forin(obj){
 	var keys=[];
@@ -91,7 +91,7 @@ function rotateMap(){
 		$("map").style.marginBottom="0px";
 		degree=0;
 		break;
-	case AUTO_DIRECTION_TYPE.HEADING:
+	case AUTO_DIRECTION_TYPE.TRACK:
 		var preLatLng=presentMarker.getPosition();
 		var curLatLng=presentMarker.getPosition();
 		for(var i=0;i<trackPolyline.getPath().getLength();i++){
@@ -256,8 +256,8 @@ function touchNorthUpIcon(){
 	rotateMap();
 }
 
-function touchHeadingUpIcon(){
-	setAutoDirection(autoDirectionType==AUTO_DIRECTION_TYPE.HEADING?AUTO_DIRECTION_TYPE.NONE:AUTO_DIRECTION_TYPE.HEADING);
+function touchTrackUpIcon(){
+	setAutoDirection(autoDirectionType==AUTO_DIRECTION_TYPE.TRACK?AUTO_DIRECTION_TYPE.NONE:AUTO_DIRECTION_TYPE.TRACK);
 	rotateMap();
 }
 
@@ -270,7 +270,7 @@ function changeMapType(){
 function refreshButton(){
 	$("centerIcon").src=(autoCenterFlag?centerOnIcon:centerOffIcon);
 	$("northUpIcon").src=((autoDirectionType==AUTO_DIRECTION_TYPE.NORTH)?northUpOnIcon:northUpOffIcon);
-	$("headingUpIcon").src=((autoDirectionType==AUTO_DIRECTION_TYPE.HEADING)?headingUpOnIcon:headingUpOffIcon);
+	$("trackUpIcon").src=((autoDirectionType==AUTO_DIRECTION_TYPE.TRACK)?trackUpOnIcon:trackUpOffIcon);
 }
 
 function initialMap(){
@@ -317,7 +317,7 @@ function initialMap(){
 
 function initial(){
 	setAutoCenterFlag(true);
-	setAutoDirection(AUTO_DIRECTION_TYPE.HEADING);
+	setAutoDirection(AUTO_DIRECTION_TYPE.TRACK);
 	initialMap();
 	updateOrientation();
 	for(var indx=0;indx<$("maptype").options.length;indx++){
@@ -330,7 +330,7 @@ function initial(){
 	$("maptype").addEventListener("change",changeMapType,false);
 	$("centerIcon").addEventListener("click",touchCenterIcon,false);
 	$("northUpIcon").addEventListener("click",touchNorthUpIcon,false);
-	$("headingUpIcon").addEventListener("click",touchHeadingUpIcon,false);
+	$("trackUpIcon").addEventListener("click",touchTrackUpIcon,false);
 	$("touch").addEventListener("touchstart",changeStartDisplayPosition,false);
 	$("touch").addEventListener("touchmove",changeDisplayPosition,false);
 	$("touch").addEventListener("touchend",changeEndDisplayPosition,false);
