@@ -95,6 +95,7 @@ function rotateMap(){
 		$("map").style.marginTop="0px";
 		$("map").style.marginRight="0px";
 		$("map").style.marginBottom="0px";
+		$("compassHandImage").style.webkitTransform="rotate(0deg)";
 		degree=0;
 		break;
 	case AUTO_DIRECTION_TYPE.TRACK:
@@ -138,6 +139,7 @@ function rotateMap(){
 		$("map").style.marginTop=Math.round((height-rotateY)/2)+"px";
 		$("map").style.marginRight=Math.round((width-rotateX)/2)+"px";
 		$("map").style.marginBottom=Math.round((height-rotateY)/2)+"px";
+		$("compassHandImage").style.webkitTransform="rotate("+degree+"deg)";
 		break;
 	}
 	google.maps.event.trigger(map,"resize");

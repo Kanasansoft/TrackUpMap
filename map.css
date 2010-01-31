@@ -13,7 +13,7 @@ body{
     position:absolute;
     top:0px;
     left:0px;b
-    z-index:1;
+    z-index:3;
 }
 
 #maptype{
@@ -21,14 +21,14 @@ body{
     top:2px;
     left:2px;
     height:20px;
-    z-index:2;
+    z-index:4;
 }
 
 #centerIcon{
     position:absolute;
     top:30px;
     left:4px;
-    z-index:2;
+    z-index:4;
     opacity:0.75;
 }
 
@@ -36,7 +36,7 @@ body{
     position:absolute;
     top:30px;
     left:38px;
-    z-index:2;
+    z-index:4;
     opacity:0.75;
 }
 
@@ -44,6 +44,21 @@ body{
     position:absolute;
     top:30px;
     left:72px;
-    z-index:2;
+    z-index:4;
+    opacity:0.75;
+}
+
+#compassBaseImage{
+    position:absolute;
+    top:4px;
+    right:4px;
+    z-index:1;
+    opacity:0.5;
+}
+#compassHandImage{
+    position:absolute;
+    top:4px;
+    right:4px;
+    z-index:1;
     opacity:0.75;
 }
