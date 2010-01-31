@@ -10,7 +10,13 @@ var overlay=undefined;
 var trackCoords=undefined;
 var trackPolyline=undefined;
 var presentIcon="images/present.png";
+var presentIconWidth=12;
+var presentIconHeight=12;
+var presentMarkerImage;
 var trackIcon="images/track.png";
+var trackIconWidth=8;
+var trackIconHeight=8;
+var trackMarkerImage;
 var centerOnIcon="images/center_on.png";
 var centerOffIcon="images/center_off.png";
 var northUpOnIcon="images/northup_on.png";
@@ -226,12 +232,13 @@ function changePresentPosition(pos){
 	}
 	lastTrackTime=pos.timestamp;
 	var latlng=new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
+//	var latlng=new google.maps.LatLng(pos.coords.latitude+Math.random()-Math.random(),pos.coords.longitude+Math.random()-Math.random());//for debug
 	trackMarkers.push(
 		new google.maps.Marker(
 			{
 				position:presentMarker.getPosition(),
 				map: map,
-				icon:trackIcon,
+				icon:trackMarkerImage,
 				"zIndex":1
 			}
 		)
@@ -294,11 +301,16 @@ function initialMap(){
 	};
 	map=new google.maps.Map($("map"),opt);
 
+	presentMarkerImage=new google.maps.MarkerImage(presentIcon);
+	presentMarkerImage.anchor=new google.maps.Point(presentIconWidth/2,presentIconHeight/2);
+	trackMarkerImage=new google.maps.MarkerImage(trackIcon);
+	trackMarkerImage.anchor=new google.maps.Point(trackIconWidth/2,trackIconHeight/2);
+
 	presentMarker=new google.maps.Marker(
 		{
 			position:latlng,
 			map: map,
-			icon:presentIcon
+			icon:presentMarkerImage
 		}
 	);
 	trackCoords=new google.maps.MVCArray();
