@@ -27,7 +27,6 @@ var touchStartX;
 var touchStartY;
 var touchEndX;
 var touchEndY;
-//var touchTime=0;
 var gestureFlag=false;
 var gestureBaseScale;
 var gestureScale;
@@ -151,15 +150,6 @@ function changeStartDisplayPosition(e){
 	var touches=e.touches;
 	if(touches.length>=2){gestureFlag=true;}
 	if(touches.length!=1){return;}
-/*
-	var currentTime=new Date().getTime();
-	if(currentTime-touchTime<500){
-		var doubleTouchPoint=new google.maps.Point(touches[0].clientX,touches[0].clientY);
-		var doubleTouchLatLng=overlay.getProjection().fromDivPixelToLatLng(doubleTouchPoint);
-		map.setCenter(doubleTouchLatLng);
-	}
-	touchTime=currentTime;
-*/
 	touchStartX=touches[0].clientX;
 	touchStartY=touches[0].clientY;
 	touchEndX=touches[0].clientX;
@@ -169,21 +159,9 @@ function changeStartDisplayPosition(e){
 function changeDisplayPosition(e){
 	e.preventDefault();
 //	e.stopPropagation();
-//	setAutoCenterFlag(false);
 	var touches=e.touches;
 	if(gestureFlag){return;}
 	if(touches.length!=1){return;}
-/*
-	var centerLatLng=map.getCenter();
-	var centerPoint=overlay.getProjection().fromLatLngToDivPixel(centerLatLng);
-	var moveX=touchX-touches[0].clientX;
-	var moveY=touchY-touches[0].clientY;
-	var movePoint=new google.maps.Point(centerPoint.x+moveX,centerPoint.y+moveY);
-	var moveLatLng=overlay.getProjection().fromDivPixelToLatLng(movePoint);
-	map.setCenter(moveLatLng);
-	touchX=touches[0].clientX;
-	touchY=touches[0].clientY;
-*/
 	touchEndX=touches[0].clientX;
 	touchEndY=touches[0].clientY;
 }
@@ -192,7 +170,6 @@ function changeEndDisplayPosition(e){
 	e.preventDefault();
 	e.stopPropagation();
 	var touches=e.touches;
-//	if(gestureFlag){return;}
 	if(touches.length!=0){return;}
 	gestureFlag=false;
 	if(!getAutoCenterFlag()){
@@ -212,7 +189,6 @@ function gestureStart(e){
 }
 
 function gestureChange(e){
-//	setAutoDirection(AUTO_DIRECTION_TYPE.NONE);
 	if(autoDirectionType==AUTO_DIRECTION_TYPE.NONE){
 		degree+=e.rotation-gestureRotation;
 	}
