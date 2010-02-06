@@ -73,7 +73,7 @@ body{
     z-index:10;
 }
 
-#centerIcon{
+#changeSizeByPinchIcon{
     position:absolute;
     top:30px;
     left:4px;
@@ -81,7 +81,7 @@ body{
     opacity:0.75;
 }
 
-#birdsEyeViewIcon{
+#centerIcon{
     position:absolute;
     top:30px;
     left:38px;
@@ -89,7 +89,7 @@ body{
     opacity:0.75;
 }
 
-#northUpIcon{
+#birdsEyeViewIcon{
     position:absolute;
     top:30px;
     left:72px;
@@ -97,10 +97,18 @@ body{
     opacity:0.75;
 }
 
-#trackUpIcon{
+#northUpIcon{
     position:absolute;
     top:30px;
     left:106px;
+    z-index:10;
+    opacity:0.75;
+}
+
+#trackUpIcon{
+    position:absolute;
+    top:30px;
+    left:140px;
     z-index:10;
     opacity:0.75;
 }

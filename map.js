@@ -19,6 +19,8 @@ var trackIcon="images/track.png";
 var trackIconWidth=8;
 var trackIconHeight=8;
 var trackMarkerImage;
+var changeSizeByPinchOnIcon="images/changesizebypinch_on.png";
+var changeSizeByPinchOffIcon="images/changesizebypinch_off.png";
 var centerOnIcon="images/center_on.png";
 var centerOffIcon="images/center_off.png";
 var birdsEyeViewOnIcon="images/birdseyeview_on.png";
@@ -35,6 +37,7 @@ var gestureFlag=false;
 var gestureBaseScale;
 var gestureScale;
 var gestureRotation;
+var changeSizeByPinchFlag;
 var autoCenterFlag;
 var birdsEyeViewFlag;
 var autoDirectionType;
@@ -60,6 +63,15 @@ function fromLatLngToDivPixel(latlng){
 
 function fromDivPixelToLatLng(point){
 	return overlay.getProjection().fromDivPixelToLatLng(point);
+}
+
+function setChangeSizeByPinchFlag(flag){
+	changeSizeByPinchFlag=flag;
+	refreshButton();
+}
+
+function getChangeSizeByPinchFlag(){
+	return changeSizeByPinchFlag;
 }
 
 function setAutoCenterFlag(flag){
@@ -199,13 +211,24 @@ function gestureStart(e){
 	gestureBaseScale=map.getZoom();
 	gestureScale=e.scale;
 	gestureRotation=e.rotation;
-	$("changesize").textContent="zoom\n0";
-	$("changesize").style.display="block";
+	if(getChangeSizeByPinchFlag()){
+		$("changesize").textContent="zoom\n0";
+		$("changesize").style.display="block";
+	}else{
+		$("changesize").style.display="none";
+		$("changesize").textContent="";
+	}
 }
 
 function gestureChange(e){
-	var scale=Math.round(Math.log(e.scale)/Math.log(2));
-	$("changesize").textContent="zoom\n"+(scale>0?"+":"")+scale;
+	if(getChangeSizeByPinchFlag()){
+		var scale=Math.round(Math.log(e.scale)/Math.log(2));
+		$("changesize").textContent="zoom\n"+(scale>0?"+":"")+scale;
+		$("changesize").style.display="block";
+	}else{
+		$("changesize").style.display="none";
+		$("changesize").textContent="";
+	}
 	if(autoDirectionType==AUTO_DIRECTION_TYPE.NONE){
 		degree+=e.rotation-gestureRotation;
 	}
@@ -249,6 +272,10 @@ function changePresentPosition(pos){
 	rotateMap();
 }
 
+function touchChangeSizeByPinchIcon(){
+	setChangeSizeByPinchFlag(!getChangeSizeByPinchFlag());
+}
+
 function touchCenterIcon(){
 	setAutoCenterFlag(!getAutoCenterFlag());
 	if(getAutoCenterFlag()){
@@ -280,6 +307,7 @@ function changeMapType(){
 }
 
 function refreshButton(){
+	$("changeSizeByPinchIcon").src=(changeSizeByPinchFlag?changeSizeByPinchOnIcon:changeSizeByPinchOffIcon);
 	$("centerIcon").src=(autoCenterFlag?centerOnIcon:centerOffIcon);
 	$("birdsEyeViewIcon").src=(birdsEyeViewFlag?birdsEyeViewOnIcon:birdsEyeViewOffIcon);
 	$("northUpIcon").src=((autoDirectionType==AUTO_DIRECTION_TYPE.NORTH)?northUpOnIcon:northUpOffIcon);
@@ -335,6 +363,7 @@ function initialMap(){
 }
 
 function initial(){
+	setChangeSizeByPinchFlag(true);
 	setAutoCenterFlag(true);
 	setBirdsEyeViewFlag(false);
 	setAutoDirection(AUTO_DIRECTION_TYPE.TRACK);
@@ -348,6 +377,7 @@ function initial(){
 		}
 	}
 	$("maptype").addEventListener("change",changeMapType,false);
+	$("changeSizeByPinchIcon").addEventListener("click",touchChangeSizeByPinchIcon,false);
 	$("centerIcon").addEventListener("click",touchCenterIcon,false);
 	$("birdsEyeViewIcon").addEventListener("click",touchBirdsEyeViewIcon,false);
 	$("northUpIcon").addEventListener("click",touchNorthUpIcon,false);
