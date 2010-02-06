@@ -1,7 +1,7 @@
 var width;
 var height;
 var lastTrackTime=0;
-var TRACK_INTERVAL=10000;
+var TRACK_INTERVAL=5000;
 var map=undefined;
 var copyright=undefined;
 var defaultMapType="ROADMAP";
@@ -240,7 +240,7 @@ function changePresentPosition(pos){
 		setDisplayCenter(latlng);
 		moveCenter();
 	}
-//	rotateMap();
+	rotateMap();
 }
 
 function touchCenterIcon(){
