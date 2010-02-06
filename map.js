@@ -191,8 +191,8 @@ function changePresentPosition(pos){
 		return;
 	}
 	lastTrackTime=pos.timestamp;
-//	var latlng=new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
-	var latlng=new google.maps.LatLng(pos.coords.latitude+(Math.random()-Math.random())/1000,pos.coords.longitude+(Math.random()-Math.random())/1000);//for debug
+	var latlng=new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
+//	var latlng=new google.maps.LatLng(pos.coords.latitude+(Math.random()-Math.random())/1000,pos.coords.longitude+(Math.random()-Math.random())/1000);//for debug
 	trackMarkers.push(
 		new google.maps.Marker(
 			{
