@@ -53,6 +53,22 @@ function forin(obj){
 	console.log(keys.join(" "));
 }
 
+function getParameters(){
+	var data={};
+	var params=location.search.replace(/^\?/,"").split("&");
+	for(var i=0;i<params.length;i++){
+		var keyvalue=params[i].split("=");
+		if(keyvalue.length!=2){continue;}
+		var key=decodeURIComponent(keyvalue[0]);
+		var value=decodeURIComponent(keyvalue[1]);
+		if(!data.hasOwnProperty(key)){
+			data[key]=[];
+		}
+		data[key].push(value);
+	}
+	return data;
+}
+
 function $(id){
 	return document.getElementById(id);
 }
@@ -391,9 +407,41 @@ function initial(){
 	$("touch").addEventListener("gesturechange",gestureChange,false);
 	$("touch").addEventListener("gestureend",gestureEnd,false);
 	window.addEventListener("orientationchange",updateOrientation,false);
-	navigator.geolocation.watchPosition(changePresentPosition);
 	rotateMap();
 	setTimeout(window.scrollTo,3000,0,0);
+	var params=getParameters();
+	if(params["mode"]&&params["mode"].length!=0&&params["mode"][0]=="demo"){
+		demo();
+	}else{
+		navigator.geolocation.watchPosition(changePresentPosition);
+	}
+}
+
+function demo(){
+	var data={
+		"distance":0.0005,
+		"direction":Math.random(),
+		"pos":{
+			"timestamp":new Date().getTime(),
+			"coords":{
+				"latitude":35.69,
+				"longitude":139.70
+			}
+		},
+		"timer":function(){
+			console.log(this.pos);
+			changePresentPosition(this.pos);
+			this.pos.timestamp=new Date().getTime();
+			this.pos.coords.latitude+=Math.sin(this.direction*Math.PI*2)*this.distance;
+			this.pos.coords.longitude+=Math.cos(this.direction*Math.PI*2)*this.distance;
+			this.direction+=Math.random()*0.05-Math.random()*0.05;
+			this.direction=((this.direction+1)%1);
+		},
+		"start":function(){
+			setInterval((function(o){return function(){o.timer();}})(this),TRACK_INTERVAL);
+		}
+	};
+	data.start();
 }
 
 function Overlay(){};
