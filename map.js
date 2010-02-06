@@ -441,6 +441,7 @@ function demo(){
 			setInterval((function(o){return function(){o.timer();}})(this),TRACK_INTERVAL);
 		}
 	};
+	setBirdsEyeViewFlag(true);
 	data.start();
 }
 
