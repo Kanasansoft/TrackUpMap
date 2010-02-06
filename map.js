@@ -237,9 +237,11 @@ function gestureChange(e){
 }
 
 function gestureEnd(e){
-	var zoom=Math.round(Math.log(e.scale)/Math.log(2))+gestureBaseScale;
-	map.setZoom(zoom);
-	copyright.setZoom(zoom);
+	if(getChangeSizeByPinchFlag()){
+		var zoom=Math.round(Math.log(e.scale)/Math.log(2))+gestureBaseScale;
+		map.setZoom(zoom);
+		copyright.setZoom(zoom);
+	}
 	$("changesize").style.display="none";
 	$("changesize").textContent="";
 //	rotateMap();
