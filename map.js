@@ -429,7 +429,6 @@ function demo(){
 			}
 		},
 		"timer":function(){
-			console.log(this.pos);
 			changePresentPosition(this.pos);
 			this.pos.timestamp=new Date().getTime();
 			this.pos.coords.latitude+=Math.sin(this.direction*Math.PI*2)*this.distance;
