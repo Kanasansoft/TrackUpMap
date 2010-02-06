@@ -12,10 +12,11 @@ body{
 
 #map{
     position:absolute;
-    margin:-50% -50%;
-    width:200%;
-    height:200%;
+    margin:-100% -100%;
+    width:300%;
+    height:300%;
     z-index:2 !important;
+    -webkit-transform-style:preserve-3d;
 }
 
 #copyright{
@@ -25,6 +26,8 @@ body{
     height:100%;
     z-index:3 !important;
     background-color:transparent !important;
+    -webkit-transform-style:preserve-3d;
+    -webkit-transform:translateZ(100000%);
 }
 
 #copyright > div > div:first-child{
@@ -58,7 +61,7 @@ body{
     opacity:0.75;
 }
 
-#northUpIcon{
+#birdsEyeViewIcon{
     position:absolute;
     top:30px;
     left:38px;
@@ -66,10 +69,18 @@ body{
     opacity:0.75;
 }
 
-#trackUpIcon{
+#northUpIcon{
     position:absolute;
     top:30px;
     left:72px;
+    z-index:10;
+    opacity:0.75;
+}
+
+#trackUpIcon{
+    position:absolute;
+    top:30px;
+    left:106px;
     z-index:10;
     opacity:0.75;
 }

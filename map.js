@@ -21,6 +21,8 @@ var trackIconHeight=8;
 var trackMarkerImage;
 var centerOnIcon="images/center_on.png";
 var centerOffIcon="images/center_off.png";
+var birdsEyeViewOnIcon="images/birdseyeview_on.png";
+var birdsEyeViewOffIcon="images/birdseyeview_off.png";
 var northUpOnIcon="images/northup_on.png";
 var northUpOffIcon="images/northup_off.png";
 var trackUpOnIcon="images/trackup_on.png";
@@ -34,6 +36,7 @@ var gestureBaseScale;
 var gestureScale;
 var gestureRotation;
 var autoCenterFlag;
+var birdsEyeViewFlag;
 var autoDirectionType;
 var degree=30;
 var AUTO_DIRECTION_TYPE={"none":"none","NORTH":"north","TRACK":"track"};
@@ -66,6 +69,15 @@ function setAutoCenterFlag(flag){
 
 function getAutoCenterFlag(){
 	return autoCenterFlag;
+}
+
+function setBirdsEyeViewFlag(flag){
+	birdsEyeViewFlag=flag;
+	refreshButton();
+}
+
+function getBirdsEyeViewFlag(){
+	return birdsEyeViewFlag;
 }
 
 function setAutoDirection(type){
@@ -107,8 +119,6 @@ function updateOrientation(){
 function rotateMap(){
 	switch(autoDirectionType){
 	case AUTO_DIRECTION_TYPE.NORTH:
-		$("map").style.webkitTransform="rotate(0deg)";
-		$("compassHandImage").style.webkitTransform="rotate(0deg)";
 		degree=0;
 		break;
 	case AUTO_DIRECTION_TYPE.TRACK:
@@ -128,11 +138,17 @@ function rotateMap(){
 			var radian=Math.atan2(curPoint.y-prePoint.y,curPoint.x-prePoint.x);
 			degree=360*(-Math.PI/2-radian)/(Math.PI*2);
 		}
+		break;
 	case AUTO_DIRECTION_TYPE.NONE:
-		$("map").style.webkitTransform="rotate("+degree+"deg)";
-		$("compassHandImage").style.webkitTransform="rotate("+degree+"deg)";
 		break;
 	}
+	if(getBirdsEyeViewFlag()){
+//		$("map").style.webkitTransform="scale(3) perspective(200) rotateX(60deg) translateY(5%) rotate("+degree+"deg)";
+		$("map").style.webkitTransform="scale(2) scaleY(1) perspective(400) rotateX(60deg) translateY(5%) rotate("+degree+"deg)";
+	}else{
+		$("map").style.webkitTransform="rotate("+degree+"deg)";
+	}
+	$("compassHandImage").style.webkitTransform="rotate("+degree+"deg)";
 }
 
 function changeStartDisplayPosition(e){
@@ -235,6 +251,11 @@ function touchCenterIcon(){
 	}
 }
 
+function touchBirdsEyeViewIcon(){
+	setBirdsEyeViewFlag(!getBirdsEyeViewFlag());
+	rotateMap();
+}
+
 function touchNorthUpIcon(){
 	setAutoDirection(autoDirectionType==AUTO_DIRECTION_TYPE.NORTH?AUTO_DIRECTION_TYPE.NONE:AUTO_DIRECTION_TYPE.NORTH);
 	rotateMap();
@@ -254,6 +275,7 @@ function changeMapType(){
 
 function refreshButton(){
 	$("centerIcon").src=(autoCenterFlag?centerOnIcon:centerOffIcon);
+	$("birdsEyeViewIcon").src=(birdsEyeViewFlag?birdsEyeViewOnIcon:birdsEyeViewOffIcon);
 	$("northUpIcon").src=((autoDirectionType==AUTO_DIRECTION_TYPE.NORTH)?northUpOnIcon:northUpOffIcon);
 	$("trackUpIcon").src=((autoDirectionType==AUTO_DIRECTION_TYPE.TRACK)?trackUpOnIcon:trackUpOffIcon);
 }
@@ -308,6 +330,7 @@ function initialMap(){
 
 function initial(){
 	setAutoCenterFlag(true);
+	setBirdsEyeViewFlag(false);
 	setAutoDirection(AUTO_DIRECTION_TYPE.TRACK);
 	initialMap();
 	updateOrientation();
@@ -320,6 +343,7 @@ function initial(){
 	}
 	$("maptype").addEventListener("change",changeMapType,false);
 	$("centerIcon").addEventListener("click",touchCenterIcon,false);
+	$("birdsEyeViewIcon").addEventListener("click",touchBirdsEyeViewIcon,false);
 	$("northUpIcon").addEventListener("click",touchNorthUpIcon,false);
 	$("trackUpIcon").addEventListener("click",touchTrackUpIcon,false);
 	$("touch").addEventListener("touchstart",changeStartDisplayPosition,false);
@@ -331,6 +355,7 @@ function initial(){
 	window.addEventListener("orientationchange",updateOrientation,false);
 	navigator.geolocation.watchPosition(changePresentPosition);
 	rotateMap();
+	setTimeout(window.scrollTo,3000,0,0);
 }
 
 function Overlay(){};
