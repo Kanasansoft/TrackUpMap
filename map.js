@@ -274,8 +274,7 @@ function initialMap(){
 		"mapTypeId":google.maps.MapTypeId[defaultMapType],
 		"navigationControl":false,
 		"mapTypeControl":false,
-		"scaleControl":false,
-		"zIndex":2
+		"scaleControl":false
 	};
 	map=new google.maps.Map($("map"),opt);
 
@@ -288,7 +287,8 @@ function initialMap(){
 		{
 			position:latlng,
 			map: map,
-			icon:presentMarkerImage
+			icon:presentMarkerImage,
+			"zIndex":2
 		}
 	);
 	trackCoords=new google.maps.MVCArray();
