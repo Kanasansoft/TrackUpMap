@@ -3,6 +3,7 @@ var height;
 var lastTrackTime=0;
 var TRACK_INTERVAL=10000;
 var map=undefined;
+var copyright=undefined;
 var defaultMapType="ROADMAP";
 var presentMarker=undefined;
 var trackMarkers=[];
@@ -81,6 +82,10 @@ function updateOrientation(){
 	$("touch").style.width=width+"px";
 	$("touch").style.height=height+"px";
 	rotateMap();
+	if(getAutoCenterFlag()){
+		map.setCenter(presentMarker.getPosition());
+		copyright.setCenter(presentMarker.getPosition());
+	}
 	setTimeout(window.scrollTo,1000,0,0);
 }
 
@@ -88,12 +93,6 @@ function rotateMap(){
 	switch(autoDirectionType){
 	case AUTO_DIRECTION_TYPE.NORTH:
 		$("map").style.webkitTransform="rotate(0deg)";
-		$("map").style.width=width+"px";
-		$("map").style.height=height+"px";
-		$("map").style.marginLeft="0px";
-		$("map").style.marginTop="0px";
-		$("map").style.marginRight="0px";
-		$("map").style.marginBottom="0px";
 		$("compassHandImage").style.webkitTransform="rotate(0deg)";
 		degree=0;
 		break;
@@ -115,29 +114,7 @@ function rotateMap(){
 			degree=360*(-Math.PI/2-radian)/(Math.PI*2);
 		}
 	case AUTO_DIRECTION_TYPE.NONE:
-		var rotateRadian=-Math.PI*2*degree/360;
-		var cornerRadian1=Math.atan2(height,width);
-		var cornerRadian2=Math.atan2(height,-width);
-		var radian1=rotateRadian+cornerRadian1;
-		var radian2=rotateRadian+cornerRadian2;
-		var distance=Math.sqrt(Math.pow(width,2)+Math.pow(height,2));
-		var scaleX=Math.max(
-			Math.abs(Math.cos(radian1)),
-			Math.abs(Math.cos(radian2))
-		);
-		var scaleY=Math.max(
-			Math.abs(Math.sin(radian1)),
-			Math.abs(Math.sin(radian2))
-		);
-		var rotateX=Math.ceil(scaleX*distance);
-		var rotateY=Math.ceil(scaleY*distance);
 		$("map").style.webkitTransform="rotate("+degree+"deg)";
-		$("map").style.width=rotateX+"px";
-		$("map").style.height=rotateY+"px";
-		$("map").style.marginLeft=Math.round((width-rotateX)/2)+"px";
-		$("map").style.marginTop=Math.round((height-rotateY)/2)+"px";
-		$("map").style.marginRight=Math.round((width-rotateX)/2)+"px";
-		$("map").style.marginBottom=Math.round((height-rotateY)/2)+"px";
 		$("compassHandImage").style.webkitTransform="rotate("+degree+"deg)";
 		break;
 	}
@@ -145,11 +122,12 @@ function rotateMap(){
 }
 
 function changeStartDisplayPosition(e){
-//	e.preventDefault();
+	e.preventDefault();
 //	e.stopPropagation();
 	var touches=e.touches;
 	if(touches.length>=2){gestureFlag=true;}
 	if(touches.length!=1){return;}
+	if(getAutoCenterFlag()){return;}
 	touchStartX=touches[0].clientX;
 	touchStartY=touches[0].clientY;
 	touchEndX=touches[0].clientX;
@@ -162,24 +140,25 @@ function changeDisplayPosition(e){
 	var touches=e.touches;
 	if(gestureFlag){return;}
 	if(touches.length!=1){return;}
+	if(getAutoCenterFlag()){return;}
 	touchEndX=touches[0].clientX;
 	touchEndY=touches[0].clientY;
 }
 
 function changeEndDisplayPosition(e){
 	e.preventDefault();
-	e.stopPropagation();
+//	e.stopPropagation();
 	var touches=e.touches;
 	if(touches.length!=0){return;}
+	if(getAutoCenterFlag()){return;}
 	gestureFlag=false;
-	if(!getAutoCenterFlag()){
-		var touchMoveX=touchStartX-touchEndX;
-		var touchMoveY=touchStartY-touchEndY;
-		var radian=-Math.PI*2*degree/360;
-		var moveX=Math.cos(radian)*touchMoveX-Math.sin(radian)*touchMoveY;
-		var moveY=Math.cos(radian)*touchMoveY+Math.sin(radian)*touchMoveX;
-		map.panBy(moveX,moveY);
-	}
+	var touchMoveX=touchStartX-touchEndX;
+	var touchMoveY=touchStartY-touchEndY;
+	var radian=-Math.PI*2*degree/360;
+	var moveX=Math.cos(radian)*touchMoveX-Math.sin(radian)*touchMoveY;
+	var moveY=Math.cos(radian)*touchMoveY+Math.sin(radian)*touchMoveX;
+	map.panBy(moveX,moveY);
+	copyright.panBy(moveX,moveY);
 }
 
 function gestureStart(e){
@@ -197,10 +176,13 @@ function gestureChange(e){
 }
 
 function gestureEnd(e){
-	map.setZoom(Math.round(Math.log(e.scale)/Math.log(2))+gestureBaseScale);
+	var zoom=Math.round(Math.log(e.scale)/Math.log(2))+gestureBaseScale;
+	map.setZoom(zoom);
+	copyright.setZoom(zoom);
 	rotateMap();
 	if(getAutoCenterFlag()){
 		map.setCenter(presentMarker.getPosition());
+		copyright.setCenter(presentMarker.getPosition());
 	}
 }
 
@@ -209,8 +191,8 @@ function changePresentPosition(pos){
 		return;
 	}
 	lastTrackTime=pos.timestamp;
-	var latlng=new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
-//	var latlng=new google.maps.LatLng(pos.coords.latitude+Math.random()-Math.random(),pos.coords.longitude+Math.random()-Math.random());//for debug
+//	var latlng=new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
+	var latlng=new google.maps.LatLng(pos.coords.latitude+(Math.random()-Math.random())/1000,pos.coords.longitude+(Math.random()-Math.random())/1000);//for debug
 	trackMarkers.push(
 		new google.maps.Marker(
 			{
@@ -223,6 +205,7 @@ function changePresentPosition(pos){
 	);
 	if(getAutoCenterFlag()){
 		map.setCenter(latlng);
+		copyright.setCenter(latlng);
 	}
 	presentMarker.setPosition(latlng);
 	trackPolyline.getPath().insertAt(0,latlng);
@@ -233,6 +216,7 @@ function touchCenterIcon(){
 	setAutoCenterFlag(!getAutoCenterFlag());
 	if(getAutoCenterFlag()){
 		map.setCenter(presentMarker.getPosition());
+		copyright.setCenter(presentMarker.getPosition());
 	}
 }
 
@@ -241,6 +225,7 @@ function touchNorthUpIcon(){
 	rotateMap();
 	if(getAutoCenterFlag()){
 		map.setCenter(presentMarker.getPosition());
+		copyright.setCenter(presentMarker.getPosition());
 	}
 }
 
@@ -249,12 +234,14 @@ function touchTrackUpIcon(){
 	rotateMap();
 	if(getAutoCenterFlag()){
 		map.setCenter(presentMarker.getPosition());
+		copyright.setCenter(presentMarker.getPosition());
 	}
 }
 
 function changeMapType(){
 	var maptype=this.options[this.selectedIndex].value;
 	map.setMapTypeId(google.maps.MapTypeId[maptype]);
+	copyright.setMapTypeId(google.maps.MapTypeId[maptype]);
 	setTimeout(window.scrollTo,0,0,0);
 }
 
@@ -277,6 +264,7 @@ function initialMap(){
 		"scaleControl":false
 	};
 	map=new google.maps.Map($("map"),opt);
+	copyright=new google.maps.Map($("copyright"),opt);
 
 	presentMarkerImage=new google.maps.MarkerImage(presentIcon);
 	presentMarkerImage.anchor=new google.maps.Point(presentIconWidth/2,presentIconHeight/2);

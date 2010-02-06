@@ -9,11 +9,37 @@ body{
     z-index:0;
     overflow:hidden;
 }
+
+#map{
+    position:absolute;
+    margin:-50% -50%;
+    width:200%;
+    height:200%;
+    z-index:2 !important;
+}
+
+#copyright{
+    position:absolute;
+    margin:0% 0%;
+    width:100%;
+    height:100%;
+    z-index:3 !important;
+    background-color:transparent !important;
+}
+
+#copyright > div > div:first-child{
+    display:none;
+}
+
+#copyright > div > div{
+    display:block;
+}
+
 #touch{
     position:absolute;
     top:0px;
     left:0px;
-    z-index:3;
+    z-index:5;
 }
 
 #maptype{
@@ -21,14 +47,14 @@ body{
     top:2px;
     left:2px;
     height:20px;
-    z-index:4;
+    z-index:10;
 }
 
 #centerIcon{
     position:absolute;
     top:30px;
     left:4px;
-    z-index:4;
+    z-index:10;
     opacity:0.75;
 }
 
@@ -36,7 +62,7 @@ body{
     position:absolute;
     top:30px;
     left:38px;
-    z-index:4;
+    z-index:10;
     opacity:0.75;
 }
 
@@ -44,7 +70,7 @@ body{
     position:absolute;
     top:30px;
     left:72px;
-    z-index:4;
+    z-index:10;
     opacity:0.75;
 }
 
@@ -52,13 +78,13 @@ body{
     position:absolute;
     top:4px;
     right:4px;
-    z-index:1;
+    z-index:7;
     opacity:0.5;
 }
 #compassHandImage{
     position:absolute;
     top:4px;
     right:4px;
-    z-index:1;
+    z-index:8;
     opacity:0.75;
 }
