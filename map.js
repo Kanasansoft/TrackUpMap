@@ -199,9 +199,13 @@ function gestureStart(e){
 	gestureBaseScale=map.getZoom();
 	gestureScale=e.scale;
 	gestureRotation=e.rotation;
+	$("changesize").textContent="zoom\n0";
+	$("changesize").style.display="block";
 }
 
 function gestureChange(e){
+	var scale=Math.round(Math.log(e.scale)/Math.log(2));
+	$("changesize").textContent="zoom\n"+(scale>0?"+":"")+scale;
 	if(autoDirectionType==AUTO_DIRECTION_TYPE.NONE){
 		degree+=e.rotation-gestureRotation;
 	}
@@ -213,6 +217,8 @@ function gestureEnd(e){
 	var zoom=Math.round(Math.log(e.scale)/Math.log(2))+gestureBaseScale;
 	map.setZoom(zoom);
 	copyright.setZoom(zoom);
+	$("changesize").style.display="none";
+	$("changesize").textContent="";
 //	rotateMap();
 //	moveCenter();
 }

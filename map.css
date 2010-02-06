@@ -38,6 +38,26 @@ body{
     display:block;
 }
 
+#changesize{
+    position:absolute;
+    margin:-60px 0% 0% -60px;
+    width:120px;
+    height:120px;
+    top:50%;
+    left:50%;
+    -webkit-border-radius:10px;
+    background-color:#333333;
+    opacity:0.5;
+    text-align:center;
+    vertical-align:middle;
+    font-size:48px;
+    z-index:4;
+    color:#ffffff;
+    font-weight:bold;
+    line-height:60px;
+    display:none;
+}
+
 #touch{
     position:absolute;
     top:0px;
