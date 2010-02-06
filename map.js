@@ -5,6 +5,7 @@ var TRACK_INTERVAL=10000;
 var map=undefined;
 var copyright=undefined;
 var defaultMapType="ROADMAP";
+var displayCenter=undefined;
 var presentMarker=undefined;
 var trackMarkers=[];
 var overlay=undefined;
@@ -50,6 +51,14 @@ function $(id){
 	return document.getElementById(id);
 }
 
+function fromLatLngToDivPixel(latlng){
+	return overlay.getProjection().fromLatLngToDivPixel(latlng);
+}
+
+function fromDivPixelToLatLng(point){
+	return overlay.getProjection().fromDivPixelToLatLng(point);
+}
+
 function setAutoCenterFlag(flag){
 	autoCenterFlag=flag;
 	refreshButton();
@@ -62,6 +71,15 @@ function getAutoCenterFlag(){
 function setAutoDirection(type){
 	autoDirectionType=type;
 	refreshButton();
+}
+
+function moveCenter(force){
+	map.setCenter(displayCenter);
+	copyright.setCenter(displayCenter);
+}
+
+function setDisplayCenter(position){
+	displayCenter=position;
 }
 
 function updateOrientation(){
@@ -81,11 +99,8 @@ function updateOrientation(){
 	$("main").style.height=height+"px";
 	$("touch").style.width=width+"px";
 	$("touch").style.height=height+"px";
-	rotateMap();
-	if(getAutoCenterFlag()){
-		map.setCenter(presentMarker.getPosition());
-		copyright.setCenter(presentMarker.getPosition());
-	}
+	google.maps.event.trigger(map,"resize");
+	moveCenter(true);
 	setTimeout(window.scrollTo,1000,0,0);
 }
 
@@ -108,8 +123,8 @@ function rotateMap(){
 		if(curLatLng.equals(preLatLng)){
 			degree=0;
 		}else{
-			var prePoint=overlay.getProjection().fromLatLngToDivPixel(preLatLng);
-			var curPoint=overlay.getProjection().fromLatLngToDivPixel(curLatLng);
+			var prePoint=fromLatLngToDivPixel(preLatLng);
+			var curPoint=fromLatLngToDivPixel(curLatLng);
 			var radian=Math.atan2(curPoint.y-prePoint.y,curPoint.x-prePoint.x);
 			degree=360*(-Math.PI/2-radian)/(Math.PI*2);
 		}
@@ -118,7 +133,6 @@ function rotateMap(){
 		$("compassHandImage").style.webkitTransform="rotate("+degree+"deg)";
 		break;
 	}
-	google.maps.event.trigger(map,"resize");
 }
 
 function changeStartDisplayPosition(e){
@@ -157,8 +171,12 @@ function changeEndDisplayPosition(e){
 	var radian=-Math.PI*2*degree/360;
 	var moveX=Math.cos(radian)*touchMoveX-Math.sin(radian)*touchMoveY;
 	var moveY=Math.cos(radian)*touchMoveY+Math.sin(radian)*touchMoveX;
-	map.panBy(moveX,moveY);
-	copyright.panBy(moveX,moveY);
+	var startPoint=fromLatLngToDivPixel(map.getCenter());
+	var centerX=startPoint.x+moveX;
+	var centerY=startPoint.y+moveY;
+	var centerLatLng=fromDivPixelToLatLng(new google.maps.Point(centerX,centerY));
+	setDisplayCenter(centerLatLng);
+	moveCenter();
 }
 
 function gestureStart(e){
@@ -179,11 +197,8 @@ function gestureEnd(e){
 	var zoom=Math.round(Math.log(e.scale)/Math.log(2))+gestureBaseScale;
 	map.setZoom(zoom);
 	copyright.setZoom(zoom);
-	rotateMap();
-	if(getAutoCenterFlag()){
-		map.setCenter(presentMarker.getPosition());
-		copyright.setCenter(presentMarker.getPosition());
-	}
+//	rotateMap();
+//	moveCenter();
 }
 
 function changePresentPosition(pos){
@@ -203,39 +218,31 @@ function changePresentPosition(pos){
 			}
 		)
 	);
-	if(getAutoCenterFlag()){
-		map.setCenter(latlng);
-		copyright.setCenter(latlng);
-	}
 	presentMarker.setPosition(latlng);
 	trackPolyline.getPath().insertAt(0,latlng);
-	rotateMap();
+	if(getAutoCenterFlag()){
+		setDisplayCenter(latlng);
+		moveCenter();
+	}
+//	rotateMap();
 }
 
 function touchCenterIcon(){
 	setAutoCenterFlag(!getAutoCenterFlag());
 	if(getAutoCenterFlag()){
-		map.setCenter(presentMarker.getPosition());
-		copyright.setCenter(presentMarker.getPosition());
+		setDisplayCenter(presentMarker.getPosition());
+		moveCenter();
 	}
 }
 
 function touchNorthUpIcon(){
 	setAutoDirection(autoDirectionType==AUTO_DIRECTION_TYPE.NORTH?AUTO_DIRECTION_TYPE.NONE:AUTO_DIRECTION_TYPE.NORTH);
 	rotateMap();
-	if(getAutoCenterFlag()){
-		map.setCenter(presentMarker.getPosition());
-		copyright.setCenter(presentMarker.getPosition());
-	}
 }
 
 function touchTrackUpIcon(){
 	setAutoDirection(autoDirectionType==AUTO_DIRECTION_TYPE.TRACK?AUTO_DIRECTION_TYPE.NONE:AUTO_DIRECTION_TYPE.TRACK);
 	rotateMap();
-	if(getAutoCenterFlag()){
-		map.setCenter(presentMarker.getPosition());
-		copyright.setCenter(presentMarker.getPosition());
-	}
 }
 
 function changeMapType(){
