@@ -41,7 +41,8 @@ var changeSizeByPinchFlag;
 var autoCenterFlag;
 var birdsEyeViewFlag;
 var autoDirectionType;
-var degree=30;
+var degree=0;
+var viewDegree=0;
 var AUTO_DIRECTION_TYPE={"none":"none","NORTH":"north","TRACK":"track"};
 
 function forin(obj){
@@ -170,6 +171,7 @@ function rotateMap(){
 	case AUTO_DIRECTION_TYPE.NONE:
 		break;
 	}
+/*
 	if(getBirdsEyeViewFlag()){
 //		$("map").style.webkitTransform="scale(3) perspective(200) rotateX(60deg) translateY(5%) rotate("+degree+"deg)";
 		$("map").style.webkitTransform="scale(2) scaleY(1) perspective(400) rotateX(60deg) translateY(5%) rotate("+degree+"deg)";
@@ -177,6 +179,29 @@ function rotateMap(){
 		$("map").style.webkitTransform="rotate("+degree+"deg)";
 	}
 	$("compassHandImage").style.webkitTransform="rotate("+degree+"deg)";
+*/
+}
+
+function rotateView(){
+	var deg=(degree+360)%360;
+	var viewDeg=(viewDegree+360)%360;
+	var gap;
+	if(deg-viewDegree>180){
+		gap=deg-viewDegree-360;
+	}else if(deg-viewDegree<-180){
+		gap=deg-viewDegree+360;
+	}else{
+		gap=deg-viewDeg;
+	}
+	viewDeg+=gap*3/5;
+	viewDegree=(viewDeg+360)%360;
+	if(getBirdsEyeViewFlag()){
+//		$("map").style.webkitTransform="scale(3) perspective(200) rotateX(60deg) translateY(5%) rotate("+degree+"deg)";
+		$("map").style.webkitTransform="scale(2) scaleY(1) perspective(400) rotateX(60deg) translateY(5%) rotate("+viewDegree+"deg)";
+	}else{
+		$("map").style.webkitTransform="rotate("+viewDegree+"deg)";
+	}
+	$("compassHandImage").style.webkitTransform="rotate("+viewDegree+"deg)";
 }
 
 function changeStartDisplayPosition(e){
@@ -408,6 +433,7 @@ function initial(){
 	$("touch").addEventListener("gestureend",gestureEnd,false);
 	window.addEventListener("orientationchange",updateOrientation,false);
 	rotateMap();
+	setInterval(rotateView,100);
 	setTimeout(window.scrollTo,3000,0,0);
 	var params=getParameters();
 	if(params["mode"]&&params["mode"].length!=0&&params["mode"][0]=="demo"){
